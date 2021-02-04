@@ -4,19 +4,19 @@ const objectives = {
         "Clash is picked"
     ],
     "outer": [
-        "Mozzie drone shot by defender",
+        "Mozzie drone gets shot by a defender",
         "Amaru dies immediately",
         "Spawnkilled",
         "Nobody has reinforced anything",
-        "Someone screaming on voice",
+        "Someone screaming over voice chat",
         "The world's least-descriptive callout",
         '"How was that a headshot?"',
         '"How was that not a headshot?"',
-        "No defenders on objective",
+        "No defenders are on objective",
         "Teamkilled",
         "Connection error",
-        "The walls between bombs are reinforced",
-        "Doc uses all stims on himself",
+        "Someone reinforces the walls between bombs",
+        "Doc uses all of his stims on himself",
         "Get a wallbang or get wallbanged",
         "Someone gets a kill while they're flashed",
         "Castle barricades the objective doors",
@@ -30,7 +30,13 @@ const objectives = {
         "Rage quitter",
         "Frost traps placed in stupid locations",
         'Someone makes a "Potato PC" joke while loading',
-        "Someone on the opposite/<wbr>wrong side of the map"
+        "Someone on the opposite/<wbr>wrong side of the map",
+        "Top fragger has an anime profile picture",
+        "Someone empties an entire magazine to hit a drone",
+        "Finka forgets to heal the team",
+        "Attacker with the defuser dies alone & far away",
+        "Someone reinforces the rotation hole",
+        "Someone reinforces right next to Mira's window"
     ]
 };
 
