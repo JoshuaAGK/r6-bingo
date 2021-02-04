@@ -61,10 +61,10 @@ h1 {
 }
 
 table {
-    border-collapse: collapse;
     grid-area: 4 / 1 / 5 / 2;
     height: 100%;
     width: 100%;
+    border-spacing: 0;
 }
 
 table, th, td {
@@ -90,11 +90,14 @@ td p {
 
 .bingo-checkbox {
     appearance: none;
+    -webkit-appearance: none;
     height: 100%;
     width: 100%;
     outline: none;
-    margin-top: 4px;
     box-sizing: border-box;
+    position: absolute;
+    top: 0;
+    left: 0;
 }
 
 .bingo-checkbox:hover {
@@ -124,7 +127,7 @@ td p {
     }
     
     table, tr, td {
-        border: 1px inset #666666;
+        border: 1px solid #666666;
     }
     
     #img-logo-big {
