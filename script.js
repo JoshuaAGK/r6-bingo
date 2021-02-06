@@ -37,6 +37,9 @@ const objectives = {
         "Attacker with the defuser dies alone & far away",
         "Someone reinforces the rotation hole",
         "Someone reinforces right next to Mira's window"
+        "Banwave",
+        "Didn't see an opponent for the entire round",
+        "Last friendly operator alive is roaming"
     ]
 };
 
