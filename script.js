@@ -45,15 +45,15 @@ const objectives = {
 
 var usedObjectives = [];
 
-const innerRingIDs = ["cb7", "cb8", "cb9", "cb12", "cb14", "cb17", "cb18", "cb19"];
-const outerRingIDs = ["cb1", "cb2", "cb3", "cb4", "cb5", "cb6", "cb10", "cb11", "cb15", "cb16", "cb20", "cb21", "cb22", "cb23", "cb24", "cb25"];
+const innerRingIDs = ["p0b7", "p0b8", "p0b9", "p0b12", "p0b14", "p0b17", "p0b18", "p0b19"];
+const outerRingIDs = ["p0b1", "p0b2", "p0b3", "p0b4", "p0b5", "p0b6", "p0b10", "p0b11", "p0b15", "p0b16", "p0b20", "p0b21", "p0b22", "p0b23", "p0b24", "p0b25"];
 
 
 window.addEventListener('load', (event) => {
-    var checkboxes = document.querySelectorAll('input.bingo-checkbox');
+    var checkboxes = document.querySelectorAll('#table-me input.bingo-checkbox');
     for (var i = 0; i < checkboxes.length; i++) {
-        var cbParent = document.getElementById(checkboxes[i].id).parentElement;
-        var cbText = cbParent.getElementsByTagName("p")[0];
+        var p0bParent = document.getElementById(checkboxes[i].id).parentElement;
+        var p0bText = p0bParent.getElementsByTagName("p")[0];
         var displayText = "";
                 
         if (innerRingIDs.includes(checkboxes[i].id) || outerRingIDs.includes(checkboxes[i].id)) {    
@@ -67,7 +67,7 @@ window.addEventListener('load', (event) => {
             displayText = objectives.inner[rand];
         }
         
-        cbText.innerHTML = displayText;
+        p0bText.innerHTML = displayText;
     }
     
     var os = null;
@@ -81,7 +81,6 @@ window.addEventListener('load', (event) => {
     
 });
 
-
 function checkSquare(e) {
    
     if (innerRingIDs.includes(e.id)) {
@@ -91,4 +90,279 @@ function checkSquare(e) {
     } else {
         console.log("centre");
     }
+    
+    
+    sendMessage(null, e.id + "/" + e.checked)
+}
+
+function hostGame() {
+    document.getElementById("menu-controls").className = "hostmenu";
+}
+
+
+var clientPeer = null;
+var clientConn = null;
+var clientUserArray = [];
+function joinGame() {
+    document.getElementById("menu-controls").className = "joinmenu";
+    
+    // Create own peer object with connection to shared PeerJS server
+    clientPeer = new Peer(null, {
+        debug: 2
+    });
+
+    clientPeer.on('open', function (id) {
+        clientUserArray = [clientPeer.id, "host"];
+
+        console.log('ID: ' + clientPeer.id);
+    });
+    clientPeer.on('connection', function (c) {
+        // Disallow incoming connections
+        c.on('open', function() {
+            c.send("Sender does not accept incoming connections");
+            setTimeout(function() { c.close(); }, 500);
+        });
+    });
+    clientPeer.on('disconnected', function () {
+        console.log('Connection lost. Please reconnect');
+
+        // Workaround for peer.reconnect deleting previous id
+        clientPeer.id = lastPeerId;
+        clientPeer._lastServerId = lastPeerId;
+        clientPeer.reconnect();
+    });
+    clientPeer.on('close', function() {
+        clientConn = null;
+        console.log('Connection destroyed');
+    });
+    clientPeer.on('error', function (err) {
+        console.log(err);
+        alert('' + err);
+    });
+    
+}
+
+function goBack() {
+    document.getElementById("menu-controls").className = "mainmenu";
+}
+
+var peer1 = null;
+var conn1 = null;
+var peer2 = null;
+var conn2 = null;
+
+var hostUserArray = ["host"];
+
+function beginHost() {
+    const roomID = "r6bingo-" + document.getElementById("lobbydata-roomid").value;
+    const slot1 = roomID + "-0";
+    const slot2 = roomID + "-1";
+    
+    peer1 = new Peer(slot1);
+    peer1.on('open', function (id) {
+        console.log('ID: ' + peer1.id);
+        console.log("Awaiting connection...");
+    });
+    peer1.on('connection', function (c) {
+        if (conn1 && conn1.open) {
+            c.on('open', function() {
+                c.send("Slot busy");
+                setTimeout(function() { c.close(); }, 100);
+            });
+            return;
+        } else {
+            conn1 = c;
+            if (!hostUserArray.includes(c.peer)) {
+                hostUserArray.push(c.peer);
+            }
+            ready1();
+            
+        }
+        
+        console.log("Connected to: " + c.peer);
+    });
+    function ready1() {
+        conn1.on('open', function () {
+            sendHostArrayToAllClients();
+        });
+        conn1.on('data', function (data) {
+            receiveDataFromClient(conn1.peer, data);
+        });
+        conn1.on('close', function () {
+            console.log(new Date().toISOString(), "Connection lost");
+            conn1 = null;
+        });
+    }
+    
+    peer2 = new Peer(slot2);
+    peer2.on('open', function (id) {
+        console.log('ID: ' + peer2.id);
+        console.log("Awaiting connection...");
+    });
+    peer2.on('connection', function (c) {
+        if (conn2 && conn2.open) {
+            c.on('open', function() {
+                c.send("Slot busy");
+                setTimeout(function() { c.close(); }, 100);
+            });
+            return;
+        } else {
+            c.send(hostUserArray);
+            conn2 = c;
+            ready2();
+            if (!hostUserArray.includes(c.peer)) {
+                hostUserArray.push(c.peer);
+            }
+        }
+        
+        console.log("Connected to: " + c.peer);
+    });
+    function ready2() {
+        conn2.on('open', function () {
+            sendHostArrayToAllClients();
+        });
+        conn2.on('data', function (data) {
+            receiveDataFromClient(conn2.peer, data);
+        });
+        conn2.on('close', function () {
+            console.log(new Date().toISOString(), "Connection lost");
+            conn2 = null;
+        });
+    }
+    
+    var mainWrapper = document.getElementById("main-wrapper");
+    mainWrapper.className = "game-wrapper";
+}
+
+function beginJoin(joinslot = 0) {
+    var roomID = "r6bingo-" + document.getElementById("lobbydata-roomid").value + "-" + joinslot;
+    var slotBusy = false;
+
+    // Close old connection
+    if (clientConn) {
+        clientConn.close();
+    }
+    
+    console.log(roomID);
+
+    // Create connection to destination peer specified in the input field
+    clientConn = clientPeer.connect(roomID, {
+        reliable: true
+    });
+    
+    clientConn.on('open', function () {
+        console.log("Connected to: " + clientConn.peer);
+        
+        var mainWrapper = document.getElementById("main-wrapper");
+        mainWrapper.className = "game-wrapper";
+        
+    });
+    // Handle incoming data (messages only since this is the signal sender)
+    clientConn.on('data', function (data) {
+        if (data == "Slot busy") {
+            slotBusy = true;
+        } else {
+            receiveDataFromHost(data);
+        }
+    });
+    clientConn.on('close', function () {
+        console.log("Connection closed");
+        if (slotBusy && joinslot < 2) {
+            joinslot++;
+            beginJoin(joinslot);
+        }
+    });
+    
+    
+}
+
+
+function receiveDataFromHost(data) {
+    if (Array.isArray(data)) {
+        
+        data = data.filter(function(item) {
+            return item !== clientPeer.id;
+        })
+        data = data.filter(function(item) {
+            return item !== "host";
+        })
+        
+        clientUserArray.push(...data);
+        console.log(clientUserArray);
+    } else {
+        console.log(data);
+        var sender = data.split(": ")[0];
+        data = data.split(": ")[1]
+        var userNum = clientUserArray.indexOf(sender);
+    
+        data = data.split("/");
+        var cellNumber = "p" + userNum + "b" + data[0].substr(3);
+        console.log(cellNumber);
+
+        var checkBool = (data[1] == "true");
+        document.getElementById(cellNumber).checked = checkBool;
+    }
+    
+    
+    
+}
+
+function receiveDataFromClient(sender, data) {
+    sendMessage(sender, data);
+    
+    var userNum = hostUserArray.indexOf(sender);
+    
+    data = data.split("/");
+    var cellNumber = "p" + userNum + "b" + data[0].substr(3);
+    console.log(cellNumber);
+    
+    var checkBool = (data[1] == "true");
+    document.getElementById(cellNumber).checked = checkBool;
+    
+}
+
+function sendHostArrayToAllClients() {
+    if (conn1 && conn1.open) {
+        conn1.send(hostUserArray);
+    }
+    if (conn2 && conn2.open) {
+        conn2.send(hostUserArray);
+    }
+}
+
+function sendMessage(forwarder = null, input = null) {    
+    var userNum = 0;
+    var cellPrefix = "";
+    
+    if (input == null) {
+        input = document.getElementById("userdata-username").value;
+    }
+    if (forwarder == null) {
+        forwarder = "host";
+    }
+    
+    userNum = hostUserArray.indexOf(forwarder);
+    cellPrefix = "p" + userNum + "b";
+    
+    
+    input = input.split("/");
+    input = cellPrefix + input[0].substr(3) + "/" + input[1];
+    
+    
+    
+    
+    
+    
+    if (conn1 && conn1.open && forwarder != conn1.peer) {
+        conn1.send(forwarder + ": " + input);
+    }
+    if (conn2 && conn2.open && forwarder != conn2.peer) {
+        conn2.send(forwarder + ": " + input);
+    }
+    if (clientConn && clientConn.open) {
+        clientConn.send(input);
+        console.log("Sent: " + input)
+    }
+    
+    
 }

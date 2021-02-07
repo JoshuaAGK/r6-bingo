@@ -45,14 +45,14 @@ h1 {
 
 #main-wrapper {
     display: grid;
-    grid-template-columns: 600px;
+    grid-template-columns: 300px 2rem 600px 2rem 300px;
     grid-template-rows: minmax(10px, 1fr) 140px minmax(20px, 2fr) 600px 2rem;
     height: 100vh;
 }
 
 #img-logo-big {
     object-fit: contain;
-    grid-area: 2 / 1 / 3 / 2;
+    grid-area: 2 / 3 / 3 / 4;
     max-height: 100%;
     max-width: 100%;
     left: 50%;
@@ -60,8 +60,11 @@ h1 {
     transform: translateX(-50%);
 }
 
+.lobbywrapper table {
+    display: none;
+}
+
 table {
-    grid-area: 4 / 1 / 5 / 2;
     height: 100%;
     width: 100%;
     border-spacing: 0;
@@ -69,6 +72,18 @@ table {
 
 table, th, td {
     border: 1px solid black;
+}
+
+#table-me {
+    grid-area: 4 / 3 / 5 / 4;
+}
+
+#table-p1 {
+    grid-area: 4 / 1 / 5 / 2;
+}
+
+#table-p2 {
+    grid-area: 4 / 5 / 5 / 6;
 }
 
 td {
@@ -100,7 +115,7 @@ td p {
     left: 0;
 }
 
-.bingo-checkbox:hover {
+#table-me .bingo-checkbox:hover {
     outline: 3px solid #9a9a9a;
     outline-offset: -2px;
 }
@@ -113,8 +128,95 @@ td p {
     display: none;
 }
 
+#meta-unix-browser:checked ~ #main-wrapper #table-me .bingo-checkbox {
+    cursor: pointer;
+}
+
 #meta-unix-browser:checked ~ #main-wrapper .bingo-checkbox:checked {
     background-color: #007bff;
+}
+
+#menu-controls {
+    grid-area: 4 / 3 / 5 / 4;
+    display: grid;
+    grid-template-columns: auto 300px auto;
+}
+
+.game-wrapper #menu-controls {
+    display: none;
+}
+
+#menu-controls * {
+    display: none;
+}
+
+#menu-controls >:nth-child(1) {
+    grid-area: 1 / 2 / 2 / 3;
+    display: block !important;
+}
+
+.mainmenu {
+    grid-template-rows: 50px auto 80px 2rem 80px 2rem;
+}
+
+.mainmenu >:nth-child(2) {
+    grid-area: 3 / 2 / 4 / 3;
+    display: block !important;
+}
+.mainmenu >:nth-child(3) {
+    grid-area: 5 / 2 / 6 / 3;
+    display: block !important;
+}
+
+.hostmenu {
+    grid-template-rows: 50px 2rem 50px auto 80px 2rem 80px 2rem;
+}
+
+.hostmenu >:nth-child(4) {
+    grid-area: 3 / 2 / 4 / 3;
+    display: block !important;
+}
+.hostmenu >:nth-child(5) {
+    grid-area: 7 / 2 / 8 / 3;
+    display: block !important;
+}
+.hostmenu >:nth-child(6) {
+    grid-area: 5 / 2 / 6 / 3;
+    display: block !important;
+}
+
+.joinmenu {
+    grid-template-rows: 50px 2rem 50px auto 80px 2rem 80px 2rem;
+}
+.joinmenu >:nth-child(4) {
+    grid-area: 3 / 2 / 4 / 3;
+    display: block !important;
+}
+.joinmenu >:nth-child(5) {
+    grid-area: 7 / 2 / 8 / 3;
+    display: block !important;
+}
+.joinmenu >:nth-child(7) {
+    grid-area: 5 / 2 / 6 / 3;
+    display: block !important;
+}
+
+#menu-controls input[type="text"] {
+    appearance: none;
+    border: none;
+    text-align: center;
+    font-size: 18px;
+}
+
+#menu-controls input[type="text"]::placeholder {
+    color: white;
+}
+
+#menu-controls button {
+    appearance: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -134,12 +236,18 @@ td p {
         filter: invert(100%)
     }
     
-    #meta-unix-browser:checked ~ #main-wrapper .bingo-checkbox {
-        cursor: pointer;
-    }
-    
     #meta-unix-browser:checked ~ #main-wrapper .bingo-checkbox:checked {
         background-color: #0a84ff;
+    }
+    
+    #menu-controls input[type="text"] {
+        background-color: black;
+        border: 2px solid #666666;
+    }
+    
+    #menu-controls button {
+        background-color: black;
+        border: 2px solid #666666;
     }
 }
 
