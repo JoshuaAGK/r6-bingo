@@ -43,6 +43,7 @@ const objectives = {
     ]
 };
 
+
 var usedObjectives = [];
 
 const innerRingIDs = ["p0b7", "p0b8", "p0b9", "p0b12", "p0b14", "p0b17", "p0b18", "p0b19"];
@@ -70,7 +71,6 @@ window.addEventListener('load', (event) => {
         p0bText.innerHTML = displayText;
     }
     
-    var os = null;
     const platform = String(window.navigator.platform).toLowerCase();
     
     if (platform.includes("win")) {
@@ -78,291 +78,274 @@ window.addEventListener('load', (event) => {
     } else {
         document.getElementById("meta-unix-browser").checked = true;
     }
-    
 });
 
-function checkSquare(e) {
-   
-    if (innerRingIDs.includes(e.id)) {
-        console.log("inner ring");
-    } else if (outerRingIDs.includes(e.id)) {
-        console.log("outer ring");
-    } else {
-        console.log("centre");
+
+class User {
+    constructor(uid = null, userArray = [], userType = "client") {
+        this.username = null;
+        this.uid = uid;
+        this.userArray = userArray;
+        this.userType = userType;
     }
     
     
-    sendMessage(null, e.id + "/" + e.checked)
-}
-
-function hostGame() {
-    document.getElementById("menu-controls").className = "hostmenu";
-}
-
-
-var clientPeer = null;
-var clientConn = null;
-var clientUserArray = [];
-function joinGame() {
-    document.getElementById("menu-controls").className = "joinmenu";
+    set checkSquare(e) {
+        var thisparent = this;
+        this.sendMessage = {
+            sender: thisparent.uid,
+            data: e.id + "/" + e.checked
+        }
+    }
     
-    // Create own peer object with connection to shared PeerJS server
-    clientPeer = new Peer(null, {
-        debug: 2
-    });
-
-    clientPeer.on('open', function (id) {
-        clientUserArray = [clientPeer.id, "host"];
-
-        console.log('ID: ' + clientPeer.id);
-    });
-    clientPeer.on('connection', function (c) {
-        // Disallow incoming connections
-        c.on('open', function() {
-            c.send("Sender does not accept incoming connections");
-            setTimeout(function() { c.close(); }, 500);
-        });
-    });
-    clientPeer.on('disconnected', function () {
-        console.log('Connection lost. Please reconnect');
-
-        // Workaround for peer.reconnect deleting previous id
-        clientPeer.id = lastPeerId;
-        clientPeer._lastServerId = lastPeerId;
-        clientPeer.reconnect();
-    });
-    clientPeer.on('close', function() {
-        clientConn = null;
-        console.log('Connection destroyed');
-    });
-    clientPeer.on('error', function (err) {
-        console.log(err);
-        alert('' + err);
-    });
     
-}
+    set sendMessage(param) {
+        var thisparent = this
+        var sender = param.sender;
+        var input = param.data;
+        
+        var userNum = 0;
+        var cellPrefix = "";
 
-function goBack() {
-    document.getElementById("menu-controls").className = "mainmenu";
-}
-
-var peer1 = null;
-var conn1 = null;
-var peer2 = null;
-var conn2 = null;
-
-var hostUserArray = ["host"];
-
-function beginHost() {
-    const roomID = "r6bingo-" + document.getElementById("lobbydata-roomid").value;
-    const slot1 = roomID + "-0";
-    const slot2 = roomID + "-1";
-    
-    peer1 = new Peer(slot1);
-    peer1.on('open', function (id) {
-        console.log('ID: ' + peer1.id);
-        console.log("Awaiting connection...");
-    });
-    peer1.on('connection', function (c) {
-        if (conn1 && conn1.open) {
-            c.on('open', function() {
-                c.send("Slot busy");
-                setTimeout(function() { c.close(); }, 100);
-            });
-            return;
-        } else {
-            conn1 = c;
-            if (!hostUserArray.includes(c.peer)) {
-                hostUserArray.push(c.peer);
+        if (input == null) {
+            input = document.getElementById("userdata-username").value;
+        }
+        if (sender == null) {
+            sender = "host";
+        }
+        
+        if (this.userType == "client") {
+            if (this.clientConn && this.clientConn.open) {
+                this.clientConn.send(input);
             }
-            ready1();
+        } else {
+            userNum = this.userArray.indexOf(sender);
+            cellPrefix = "p" + userNum + "b";
+
+
+            input = input.split("/");
+            input = cellPrefix + input[0].substr(3) + "/" + input[1];
             
-        }
-        
-        console.log("Connected to: " + c.peer);
-    });
-    function ready1() {
-        conn1.on('open', function () {
-            sendHostArrayToAllClients();
-        });
-        conn1.on('data', function (data) {
-            receiveDataFromClient(conn1.peer, data);
-        });
-        conn1.on('close', function () {
-            console.log(new Date().toISOString(), "Connection lost");
-            conn1 = null;
-        });
-    }
-    
-    peer2 = new Peer(slot2);
-    peer2.on('open', function (id) {
-        console.log('ID: ' + peer2.id);
-        console.log("Awaiting connection...");
-    });
-    peer2.on('connection', function (c) {
-        if (conn2 && conn2.open) {
-            c.on('open', function() {
-                c.send("Slot busy");
-                setTimeout(function() { c.close(); }, 100);
-            });
-            return;
-        } else {
-            c.send(hostUserArray);
-            conn2 = c;
-            ready2();
-            if (!hostUserArray.includes(c.peer)) {
-                hostUserArray.push(c.peer);
+            for (var i = 0; i < this.conns.length; i++) {
+                if (this.conns[i] && this.conns[i].open && sender != this.conns[i].peer) {
+                    this.conns[i].send(sender + ": " + input);
+                }
             }
         }
-        
-        console.log("Connected to: " + c.peer);
-    });
-    function ready2() {
-        conn2.on('open', function () {
-            sendHostArrayToAllClients();
-        });
-        conn2.on('data', function (data) {
-            receiveDataFromClient(conn2.peer, data);
-        });
-        conn2.on('close', function () {
-            console.log(new Date().toISOString(), "Connection lost");
-            conn2 = null;
-        });
     }
-    
-    var mainWrapper = document.getElementById("main-wrapper");
-    mainWrapper.className = "game-wrapper";
 }
 
-function beginJoin(joinslot = 0) {
-    var roomID = "r6bingo-" + document.getElementById("lobbydata-roomid").value + "-" + joinslot;
-    var slotBusy = false;
 
-    // Close old connection
-    if (clientConn) {
-        clientConn.close();
+class Host extends User {
+    constructor(uid = "host", userArray = ["host"], userType = "host") {
+        super(uid, userArray, userType);
+        this.peers = [null, null, null, null];
+        this.conns = [null, null, null, null];
     }
     
-    console.log(roomID);
 
-    // Create connection to destination peer specified in the input field
-    clientConn = clientPeer.connect(roomID, {
-        reliable: true
-    });
-    
-    clientConn.on('open', function () {
-        console.log("Connected to: " + clientConn.peer);
+    get beginHost() {
+        for (var i = 0; i < this.peers.length; i++) {
+            const roomID = "r6bingo-" + document.getElementById("lobbydata-roomid").value + "-" + i;
+            this.peers[i] = new Peer(roomID);
+            var thisparent = this;
+
+            this.peers[i].on('connection', function(c) {
+                var connIndex = parseInt(this.id[String(this.id).length - 1]);
+                if (thisparent.conns[connIndex] && thisparent.conns[connIndex].open) {
+                    c.on('open', function() {
+                        c.send("Slot busy");
+                        setTimeout(function() { c.close(); }, 100);
+                    });
+                    return;
+                } else {
+                    thisparent.conns[connIndex] = c;
+                    if (!thisparent.userArray.includes(c.peer)) {
+                        thisparent.userArray.push(c.peer);
+                    }
+                    
+                    ready(connIndex);
+                    console.log("Connected to: " + c.peer);
+                }
+            });
+
+            function ready(j) {
+                thisparent.conns[j].on('open', function () {
+                    thisparent.sendUserArrayToClients;
+                });
+                thisparent.conns[j].on('data', function (data) {
+                    thisparent.receiveDataFromClient = {
+                        sender: thisparent.conns[j].peer,
+                        data: data
+                    };
+                });
+                thisparent.conns[j].on('close', function () {
+                    console.log(new Date().toISOString(), "Connection lost");
+                    thisparent.conns[j] = null;
+                });
+            }
+        }
         
         var mainWrapper = document.getElementById("main-wrapper");
         mainWrapper.className = "game-wrapper";
-        
-    });
-    // Handle incoming data (messages only since this is the signal sender)
-    clientConn.on('data', function (data) {
-        if (data == "Slot busy") {
-            slotBusy = true;
-        } else {
-            receiveDataFromHost(data);
+    }
+    
+    
+    get sendUserArrayToClients() {
+        for (var i = 0; i < this.conns.length; i++) {
+            if (this.conns[i] && this.conns[i].open) {
+                this.conns[i].send(this.userArray);
+            }
         }
-    });
-    clientConn.on('close', function () {
-        console.log("Connection closed");
-        if (slotBusy && joinslot < 2) {
-            joinslot++;
-            beginJoin(joinslot);
-        }
-    });
+    }
     
     
-}
+    set receiveDataFromClient(param) {
+        var sender = param.sender;
+        var data = param.data;
+                
+        this.sendMessage = ({
+            sender: sender,
+            data: data
+        });
 
+        var userNum = this.userArray.indexOf(sender);
 
-function receiveDataFromHost(data) {
-    if (Array.isArray(data)) {
-        
-        data = data.filter(function(item) {
-            return item !== clientPeer.id;
-        })
-        data = data.filter(function(item) {
-            return item !== "host";
-        })
-        
-        clientUserArray.push(...data);
-        console.log(clientUserArray);
-    } else {
-        console.log(data);
-        var sender = data.split(": ")[0];
-        data = data.split(": ")[1]
-        var userNum = clientUserArray.indexOf(sender);
-    
         data = data.split("/");
         var cellNumber = "p" + userNum + "b" + data[0].substr(3);
-        console.log(cellNumber);
 
         var checkBool = (data[1] == "true");
         document.getElementById(cellNumber).checked = checkBool;
     }
-    
-    
-    
 }
 
-function receiveDataFromClient(sender, data) {
-    sendMessage(sender, data);
+
+class Client extends User {
+    constructor(uid = null, userArray = [], userType = "client") {
+        super(uid, userArray, userType);
+        this.clientPeer = null;
+        this.clientConn = null;
     
-    var userNum = hostUserArray.indexOf(sender);
+        var thisparent = this;
+        // Create own peer object with connection to shared PeerJS server
+        this.clientPeer = new Peer(null, {
+            debug: 2
+        });
+
+        this.clientPeer.on('open', function (id) {
+            thisparent.userArray = [thisparent.clientPeer.id, "host"];
+            thisparent.uid = thisparent.clientPeer.id;
+            console.log('My uid: ' + thisparent.clientPeer.id);
+        });
+        this.clientPeer.on('connection', function (c) {
+            // Disallow incoming connections
+            c.on('open', function() {
+                c.send("Sender does not accept incoming connections");
+                setTimeout(function() { c.close(); }, 500);
+            });
+        });
+        this.clientPeer.on('disconnected', function () {
+            console.log('Connection lost. Please reconnect');
+
+            // Workaround for peer.reconnect deleting previous id
+            thisparent.clientPeer.id = lastPeerId;
+            thisparent.clientPeer._lastServerId = lastPeerId;
+            thisparent.clientPeer.reconnect();
+        });
+        this.clientPeer.on('close', function() {
+            thisparent.clientConn = null;
+            console.log('Connection destroyed');
+        });
+        this.clientPeer.on('error', function (err) {
+            console.log(err);
+            alert('' + err);
+        });
+    }
     
-    data = data.split("/");
-    var cellNumber = "p" + userNum + "b" + data[0].substr(3);
-    console.log(cellNumber);
     
-    var checkBool = (data[1] == "true");
-    document.getElementById(cellNumber).checked = checkBool;
+    set beginJoin(joinslot = 0) {
+        var roomID = "r6bingo-" + document.getElementById("lobbydata-roomid").value + "-" + joinslot;
+        var slotBusy = false;
+        var thisparent = this;
+
+        // Close old connection
+        if (this.clientConn) {
+            this.clientConn.close();
+        }
+
+        console.log("Attempting to connect to: " + roomID);
+
+        // Create connection to destination peer specified in the input field
+        this.clientConn = this.clientPeer.connect(roomID, {
+            reliable: true
+        });
+
+        this.clientConn.on('open', function () {
+            console.log("Connected to: " + thisparent.clientConn.peer);
+
+            var mainWrapper = document.getElementById("main-wrapper");
+            mainWrapper.className = "game-wrapper";
+
+        });
+        // Handle incoming data (messages only since this is the signal sender)
+        this.clientConn.on('data', function (data) {
+            if (data == "Slot busy") {
+                slotBusy = true;
+            } else {
+                thisparent.receiveDataFromHost = data;
+            }
+        });
+        this.clientConn.on('close', function () {
+            console.log("Connection closed");
+            if (slotBusy && joinslot < 2) {
+                joinslot++;
+                thisparent.beginJoin = joinslot;
+            }
+        });
+    }
     
+    
+    set receiveDataFromHost(data) {
+        var thisparent = this;
+        if (Array.isArray(data)) {
+            data = data.filter(function(item) {
+                return item !== thisparent.clientPeer.id;
+            })
+            data = data.filter(function(item) {
+                return item !== "host";
+            })
+
+            this.userArray.push(...data);
+            console.log("All users:", this.userArray);
+        } else {
+            var sender = data.split(": ")[0];
+            data = data.split(": ")[1]
+            var userNum = this.userArray.indexOf(sender);
+
+            data = data.split("/");
+            var cellNumber = "p" + userNum + "b" + data[0].substr(3);
+
+            var checkBool = (data[1] == "true");
+            document.getElementById(cellNumber).checked = checkBool;
+        }
+    }
 }
 
-function sendHostArrayToAllClients() {
-    if (conn1 && conn1.open) {
-        conn1.send(hostUserArray);
-    }
-    if (conn2 && conn2.open) {
-        conn2.send(hostUserArray);
-    }
+var user = new User;
+
+
+function hostGame() {
+    document.getElementById("menu-controls").className = "hostmenu";
+    user = new Host;
 }
 
-function sendMessage(forwarder = null, input = null) {    
-    var userNum = 0;
-    var cellPrefix = "";
-    
-    if (input == null) {
-        input = document.getElementById("userdata-username").value;
-    }
-    if (forwarder == null) {
-        forwarder = "host";
-    }
-    
-    userNum = hostUserArray.indexOf(forwarder);
-    cellPrefix = "p" + userNum + "b";
-    
-    
-    input = input.split("/");
-    input = cellPrefix + input[0].substr(3) + "/" + input[1];
-    
-    
-    
-    
-    
-    
-    if (conn1 && conn1.open && forwarder != conn1.peer) {
-        conn1.send(forwarder + ": " + input);
-    }
-    if (conn2 && conn2.open && forwarder != conn2.peer) {
-        conn2.send(forwarder + ": " + input);
-    }
-    if (clientConn && clientConn.open) {
-        clientConn.send(input);
-        console.log("Sent: " + input)
-    }
-    
-    
+
+function joinGame() {
+    document.getElementById("menu-controls").className = "joinmenu";
+    user = new Client;
+}
+
+
+function goBack() {
+    document.getElementById("menu-controls").className = "mainmenu";
 }

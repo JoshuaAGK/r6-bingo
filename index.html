@@ -27,7 +27,7 @@
         <input type="checkbox" tabindex="-1" class="metadata-checkbox" id="meta-windows-browser" name="meta-windows-browser" />
 
         <section id="main-wrapper" class="lobbywrapper">
-            <img src="img/r6_bingo.png" id="img-logo-big" alt="R6 Bingo logo">
+<!--            <img src="img/r6_bingo.png" id="img-logo-big" alt="R6 Bingo logo">-->
 
             <div id="menu-controls" class="mainmenu">
                 <input type="text" name="userdata-username" id="userdata-username" placeholder="Username (not yet functional)" />
@@ -35,85 +35,45 @@
                 <button onclick="joinGame()">Join a game</button>
                 <input type="text" name="lobbydata-roomid" id="lobbydata-roomid" placeholder="Room ID" />
                 <button onclick="goBack()">Cancel</button>
-                <button onclick="beginHost()">Start game</button>
-                <button onclick="beginJoin()">Join game</button>
+                <button onclick="user.beginHost">Start game</button>
+                <button onclick="user.beginJoin=0">Join game</button>
             </div>
             
-<!--
             <table id="table-me">
                 <tr>
-                    <td><input id="cb1" class="bingo-checkbox" type="checkbox" onclick="checkSquare(this)"/><p></p></td>
-                    <td><input id="cb2" class="bingo-checkbox" type="checkbox" onclick="checkSquare(this)"/><p></p></td>
-                    <td><input id="cb3" class="bingo-checkbox" type="checkbox" onclick="checkSquare(this)"/><p></p></td>
-                    <td><input id="cb4" class="bingo-checkbox" type="checkbox" onclick="checkSquare(this)"/><p></p></td>
-                    <td><input id="cb5" class="bingo-checkbox" type="checkbox" onclick="checkSquare(this)"/><p></p></td>
+                    <td><input id="p0b1" class="bingo-checkbox" type="checkbox" onclick="user.checkSquare = this" /><p></p></td>
+                    <td><input id="p0b2" class="bingo-checkbox" type="checkbox" onclick="user.checkSquare = this" /><p></p></td>
+                    <td><input id="p0b3" class="bingo-checkbox" type="checkbox" onclick="user.checkSquare = this" /><p></p></td>
+                    <td><input id="p0b4" class="bingo-checkbox" type="checkbox" onclick="user.checkSquare = this" /><p></p></td>
+                    <td><input id="p0b5" class="bingo-checkbox" type="checkbox" onclick="user.checkSquare = this" /><p></p></td>
                 </tr> 
                 <tr>
-                    <td><input id="cb6" class="bingo-checkbox" type="checkbox" onclick="checkSquare(this)"/><p></p></td>
-                    <td><input id="cb7" class="bingo-checkbox" type="checkbox" onclick="checkSquare(this)"/><p></p></td>
-                    <td><input id="cb8" class="bingo-checkbox" type="checkbox" onclick="checkSquare(this)"/><p></p></td>
-                    <td><input id="cb9" class="bingo-checkbox" type="checkbox" onclick="checkSquare(this)"/><p></p></td>
-                    <td><input id="cb10" class="bingo-checkbox" type="checkbox" onclick="checkSquare(this)"/><p></p></td>
+                    <td><input id="p0b6" class="bingo-checkbox" type="checkbox" onclick="user.checkSquare = this" /><p></p></td>
+                    <td><input id="p0b7" class="bingo-checkbox" type="checkbox" onclick="user.checkSquare = this" /><p></p></td>
+                    <td><input id="p0b8" class="bingo-checkbox" type="checkbox" onclick="user.checkSquare = this" /><p></p></td>
+                    <td><input id="p0b9" class="bingo-checkbox" type="checkbox" onclick="user.checkSquare = this" /><p></p></td>
+                    <td><input id="p0b10" class="bingo-checkbox" type="checkbox" onclick="user.checkSquare = this" /><p></p></td>
                 </tr>
                 <tr>
-                    <td><input id="cb11" class="bingo-checkbox" type="checkbox" onclick="checkSquare(this)"/><p></p></td>
-                    <td><input id="cb12" class="bingo-checkbox" type="checkbox" onclick="checkSquare(this)"/><p></p></td>
-                    <td><input id="cb13" class="bingo-checkbox" type="checkbox" onclick="checkSquare(this)"/><p></p></td>
-                    <td><input id="cb14" class="bingo-checkbox" type="checkbox" onclick="checkSquare(this)"/><p></p></td>
-                    <td><input id="cb15" class="bingo-checkbox" type="checkbox" onclick="checkSquare(this)"/><p></p></td>
-                </tr> 
-                <tr> 
-                    <td><input id="cb16" class="bingo-checkbox" type="checkbox" onclick="checkSquare(this)"/><p></p></td>
-                    <td><input id="cb17" class="bingo-checkbox" type="checkbox" onclick="checkSquare(this)"/><p></p></td>
-                    <td><input id="cb18" class="bingo-checkbox" type="checkbox" onclick="checkSquare(this)"/><p></p></td>
-                    <td><input id="cb19" class="bingo-checkbox" type="checkbox" onclick="checkSquare(this)"/><p></p></td>
-                    <td><input id="cb20" class="bingo-checkbox" type="checkbox" onclick="checkSquare(this)"/><p></p></td>
-                </tr>
-                <tr>
-                    <td><input id="cb21" class="bingo-checkbox" type="checkbox" onclick="checkSquare(this)"/><p></p></td>
-                    <td><input id="cb22" class="bingo-checkbox" type="checkbox" onclick="checkSquare(this)"/><p></p></td>
-                    <td><input id="cb23" class="bingo-checkbox" type="checkbox" onclick="checkSquare(this)"/><p></p></td>
-                    <td><input id="cb24" class="bingo-checkbox" type="checkbox" onclick="checkSquare(this)"/><p></p></td>
-                    <td><input id="cb25" class="bingo-checkbox" type="checkbox" onclick="checkSquare(this)"/><p></p></td>
-                </tr>
-            </table>
--->
-            
-            <table id="table-me">
-                <tr>
-                    <td><input id="p0b1" class="bingo-checkbox" type="checkbox" onclick="checkSquare(this)" /><p></p></td>
-                    <td><input id="p0b2" class="bingo-checkbox" type="checkbox" onclick="checkSquare(this)" /><p></p></td>
-                    <td><input id="p0b3" class="bingo-checkbox" type="checkbox" onclick="checkSquare(this)" /><p></p></td>
-                    <td><input id="p0b4" class="bingo-checkbox" type="checkbox" onclick="checkSquare(this)" /><p></p></td>
-                    <td><input id="p0b5" class="bingo-checkbox" type="checkbox" onclick="checkSquare(this)" /><p></p></td>
-                </tr> 
-                <tr>
-                    <td><input id="p0b6" class="bingo-checkbox" type="checkbox" onclick="checkSquare(this)" /><p></p></td>
-                    <td><input id="p0b7" class="bingo-checkbox" type="checkbox" onclick="checkSquare(this)" /><p></p></td>
-                    <td><input id="p0b8" class="bingo-checkbox" type="checkbox" onclick="checkSquare(this)" /><p></p></td>
-                    <td><input id="p0b9" class="bingo-checkbox" type="checkbox" onclick="checkSquare(this)" /><p></p></td>
-                    <td><input id="p0b10" class="bingo-checkbox" type="checkbox" onclick="checkSquare(this)" /><p></p></td>
-                </tr>
-                <tr>
-                    <td><input id="p0b11" class="bingo-checkbox" type="checkbox" onclick="checkSquare(this)" /><p></p></td>
-                    <td><input id="p0b12" class="bingo-checkbox" type="checkbox" onclick="checkSquare(this)" /><p></p></td>
-                    <td><input id="p0b13" class="bingo-checkbox" type="checkbox" onclick="checkSquare(this)" /><p></p></td>
-                    <td><input id="p0b14" class="bingo-checkbox" type="checkbox" onclick="checkSquare(this)" /><p></p></td>
-                    <td><input id="p0b15" class="bingo-checkbox" type="checkbox" onclick="checkSquare(this)" /><p></p></td>
+                    <td><input id="p0b11" class="bingo-checkbox" type="checkbox" onclick="user.checkSquare = this" /><p></p></td>
+                    <td><input id="p0b12" class="bingo-checkbox" type="checkbox" onclick="user.checkSquare = this" /><p></p></td>
+                    <td><input id="p0b13" class="bingo-checkbox" type="checkbox" onclick="user.checkSquare = this" /><p></p></td>
+                    <td><input id="p0b14" class="bingo-checkbox" type="checkbox" onclick="user.checkSquare = this" /><p></p></td>
+                    <td><input id="p0b15" class="bingo-checkbox" type="checkbox" onclick="user.checkSquare = this" /><p></p></td>
                 </tr> 
                 <tr> 
-                    <td><input id="p0b16" class="bingo-checkbox" type="checkbox" onclick="checkSquare(this)" /><p></p></td>
-                    <td><input id="p0b17" class="bingo-checkbox" type="checkbox" onclick="checkSquare(this)" /><p></p></td>
-                    <td><input id="p0b18" class="bingo-checkbox" type="checkbox" onclick="checkSquare(this)" /><p></p></td>
-                    <td><input id="p0b19" class="bingo-checkbox" type="checkbox" onclick="checkSquare(this)" /><p></p></td>
-                    <td><input id="p0b20" class="bingo-checkbox" type="checkbox" onclick="checkSquare(this)" /><p></p></td>
+                    <td><input id="p0b16" class="bingo-checkbox" type="checkbox" onclick="user.checkSquare = this" /><p></p></td>
+                    <td><input id="p0b17" class="bingo-checkbox" type="checkbox" onclick="user.checkSquare = this" /><p></p></td>
+                    <td><input id="p0b18" class="bingo-checkbox" type="checkbox" onclick="user.checkSquare = this" /><p></p></td>
+                    <td><input id="p0b19" class="bingo-checkbox" type="checkbox" onclick="user.checkSquare = this" /><p></p></td>
+                    <td><input id="p0b20" class="bingo-checkbox" type="checkbox" onclick="user.checkSquare = this" /><p></p></td>
                 </tr>
                 <tr>
-                    <td><input id="p0b21" class="bingo-checkbox" type="checkbox" onclick="checkSquare(this)" /><p></p></td>
-                    <td><input id="p0b22" class="bingo-checkbox" type="checkbox" onclick="checkSquare(this)" /><p></p></td>
-                    <td><input id="p0b23" class="bingo-checkbox" type="checkbox" onclick="checkSquare(this)" /><p></p></td>
-                    <td><input id="p0b24" class="bingo-checkbox" type="checkbox" onclick="checkSquare(this)" /><p></p></td>
-                    <td><input id="p0b25" class="bingo-checkbox" type="checkbox" onclick="checkSquare(this)" /><p></p></td>
+                    <td><input id="p0b21" class="bingo-checkbox" type="checkbox" onclick="user.checkSquare = this" /><p></p></td>
+                    <td><input id="p0b22" class="bingo-checkbox" type="checkbox" onclick="user.checkSquare = this" /><p></p></td>
+                    <td><input id="p0b23" class="bingo-checkbox" type="checkbox" onclick="user.checkSquare = this" /><p></p></td>
+                    <td><input id="p0b24" class="bingo-checkbox" type="checkbox" onclick="user.checkSquare = this" /><p></p></td>
+                    <td><input id="p0b25" class="bingo-checkbox" type="checkbox" onclick="user.checkSquare = this" /><p></p></td>
                 </tr>
             </table>
             
