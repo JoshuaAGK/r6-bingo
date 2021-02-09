@@ -27,7 +27,9 @@
         <input type="checkbox" tabindex="-1" class="metadata-checkbox" id="meta-windows-browser" name="meta-windows-browser" />
 
         <section id="main-wrapper" class="lobbywrapper">
-            <img src="img/r6_bingo.png" id="img-logo-big" alt="R6 Bingo logo">
+            <figure>
+                <img src="img/r6_bingo.png" id="img-logo-big" alt="R6 Bingo logo">
+            </figure>
 
             <div id="menu-controls" class="mainmenu">
                 <input type="text" name="userdata-username" id="userdata-username" placeholder="Username (not yet functional)" />
@@ -39,7 +41,8 @@
                 <button onclick="user.beginJoin=0">Join game</button>
             </div>
             
-            <table id="table-me">
+            <h2 class="user-name">Username 1</h2>
+            <table id="table-me" class="user-table">
                 <tr>
                     <td><input id="p0b1" class="bingo-checkbox" type="checkbox" onclick="user.checkSquare = this" /><p></p></td>
                     <td><input id="p0b2" class="bingo-checkbox" type="checkbox" onclick="user.checkSquare = this" /><p></p></td>
@@ -77,7 +80,8 @@
                 </tr>
             </table>
             
-            <table id="table-p1">
+            <h2 class="user-name">Username 2</h2>
+            <table id="table-p1" class="user-table">
                 <tr>
                     <td><input id="p1b1" class="bingo-checkbox" type="checkbox" disabled="disabled" /><p></p></td>
                     <td><input id="p1b2" class="bingo-checkbox" type="checkbox" disabled="disabled" /><p></p></td>
@@ -115,7 +119,8 @@
                 </tr>
             </table>
             
-            <table id="table-p2">
+            <h2 class="user-name">Username 3</h2>
+            <table id="table-p2" class="user-table">
                 <tr>
                     <td><input id="p2b1" class="bingo-checkbox" type="checkbox" disabled="disabled" /><p></p></td>
                     <td><input id="p2b2" class="bingo-checkbox" type="checkbox" disabled="disabled" /><p></p></td>
@@ -150,6 +155,84 @@
                     <td><input id="p2b23" class="bingo-checkbox" type="checkbox" disabled="disabled" /><p></p></td>
                     <td><input id="p2b24" class="bingo-checkbox" type="checkbox" disabled="disabled" /><p></p></td>
                     <td><input id="p2b25" class="bingo-checkbox" type="checkbox" disabled="disabled" /><p></p></td>
+                </tr>
+            </table>
+            
+            <h2 class="user-name">Username 4</h2>
+            <table id="table-p3" class="user-table">
+                <tr>
+                    <td><input id="p3b1" class="bingo-checkbox" type="checkbox" disabled="disabled" /><p></p></td>
+                    <td><input id="p3b2" class="bingo-checkbox" type="checkbox" disabled="disabled" /><p></p></td>
+                    <td><input id="p3b3" class="bingo-checkbox" type="checkbox" disabled="disabled" /><p></p></td>
+                    <td><input id="p3b4" class="bingo-checkbox" type="checkbox" disabled="disabled" /><p></p></td>
+                    <td><input id="p3b5" class="bingo-checkbox" type="checkbox" disabled="disabled" /><p></p></td>
+                </tr> 
+                <tr>
+                    <td><input id="p3b6" class="bingo-checkbox" type="checkbox" disabled="disabled" /><p></p></td>
+                    <td><input id="p3b7" class="bingo-checkbox" type="checkbox" disabled="disabled" /><p></p></td>
+                    <td><input id="p3b8" class="bingo-checkbox" type="checkbox" disabled="disabled" /><p></p></td>
+                    <td><input id="p3b9" class="bingo-checkbox" type="checkbox" disabled="disabled" /><p></p></td>
+                    <td><input id="p3b10" class="bingo-checkbox" type="checkbox" disabled="disabled" /><p></p></td>
+                </tr>
+                <tr>
+                    <td><input id="p3b11" class="bingo-checkbox" type="checkbox" disabled="disabled" /><p></p></td>
+                    <td><input id="p3b12" class="bingo-checkbox" type="checkbox" disabled="disabled" /><p></p></td>
+                    <td><input id="p3b13" class="bingo-checkbox" type="checkbox" disabled="disabled" /><p></p></td>
+                    <td><input id="p3b14" class="bingo-checkbox" type="checkbox" disabled="disabled" /><p></p></td>
+                    <td><input id="p3b15" class="bingo-checkbox" type="checkbox" disabled="disabled" /><p></p></td>
+                </tr> 
+                <tr> 
+                    <td><input id="p3b16" class="bingo-checkbox" type="checkbox" disabled="disabled" /><p></p></td>
+                    <td><input id="p3b17" class="bingo-checkbox" type="checkbox" disabled="disabled" /><p></p></td>
+                    <td><input id="p3b18" class="bingo-checkbox" type="checkbox" disabled="disabled" /><p></p></td>
+                    <td><input id="p3b19" class="bingo-checkbox" type="checkbox" disabled="disabled" /><p></p></td>
+                    <td><input id="p3b20" class="bingo-checkbox" type="checkbox" disabled="disabled" /><p></p></td>
+                </tr>
+                <tr>
+                    <td><input id="p3b21" class="bingo-checkbox" type="checkbox" disabled="disabled" /><p></p></td>
+                    <td><input id="p3b22" class="bingo-checkbox" type="checkbox" disabled="disabled" /><p></p></td>
+                    <td><input id="p3b23" class="bingo-checkbox" type="checkbox" disabled="disabled" /><p></p></td>
+                    <td><input id="p3b24" class="bingo-checkbox" type="checkbox" disabled="disabled" /><p></p></td>
+                    <td><input id="p3b25" class="bingo-checkbox" type="checkbox" disabled="disabled" /><p></p></td>
+                </tr>
+            </table>
+            
+            <h2 class="user-name">Username 5</h2>
+            <table id="table-p4" class="user-table">
+                <tr>
+                    <td><input id="p4b1" class="bingo-checkbox" type="checkbox" disabled="disabled" /><p></p></td>
+                    <td><input id="p4b2" class="bingo-checkbox" type="checkbox" disabled="disabled" /><p></p></td>
+                    <td><input id="p4b3" class="bingo-checkbox" type="checkbox" disabled="disabled" /><p></p></td>
+                    <td><input id="p4b4" class="bingo-checkbox" type="checkbox" disabled="disabled" /><p></p></td>
+                    <td><input id="p4b5" class="bingo-checkbox" type="checkbox" disabled="disabled" /><p></p></td>
+                </tr> 
+                <tr>
+                    <td><input id="p4b6" class="bingo-checkbox" type="checkbox" disabled="disabled" /><p></p></td>
+                    <td><input id="p4b7" class="bingo-checkbox" type="checkbox" disabled="disabled" /><p></p></td>
+                    <td><input id="p4b8" class="bingo-checkbox" type="checkbox" disabled="disabled" /><p></p></td>
+                    <td><input id="p4b9" class="bingo-checkbox" type="checkbox" disabled="disabled" /><p></p></td>
+                    <td><input id="p4b10" class="bingo-checkbox" type="checkbox" disabled="disabled" /><p></p></td>
+                </tr>
+                <tr>
+                    <td><input id="p4b11" class="bingo-checkbox" type="checkbox" disabled="disabled" /><p></p></td>
+                    <td><input id="p4b12" class="bingo-checkbox" type="checkbox" disabled="disabled" /><p></p></td>
+                    <td><input id="p4b13" class="bingo-checkbox" type="checkbox" disabled="disabled" /><p></p></td>
+                    <td><input id="p4b14" class="bingo-checkbox" type="checkbox" disabled="disabled" /><p></p></td>
+                    <td><input id="p4b15" class="bingo-checkbox" type="checkbox" disabled="disabled" /><p></p></td>
+                </tr> 
+                <tr> 
+                    <td><input id="p4b16" class="bingo-checkbox" type="checkbox" disabled="disabled" /><p></p></td>
+                    <td><input id="p4b17" class="bingo-checkbox" type="checkbox" disabled="disabled" /><p></p></td>
+                    <td><input id="p4b18" class="bingo-checkbox" type="checkbox" disabled="disabled" /><p></p></td>
+                    <td><input id="p4b19" class="bingo-checkbox" type="checkbox" disabled="disabled" /><p></p></td>
+                    <td><input id="p4b20" class="bingo-checkbox" type="checkbox" disabled="disabled" /><p></p></td>
+                </tr>
+                <tr>
+                    <td><input id="p4b21" class="bingo-checkbox" type="checkbox" disabled="disabled" /><p></p></td>
+                    <td><input id="p4b22" class="bingo-checkbox" type="checkbox" disabled="disabled" /><p></p></td>
+                    <td><input id="p4b23" class="bingo-checkbox" type="checkbox" disabled="disabled" /><p></p></td>
+                    <td><input id="p4b24" class="bingo-checkbox" type="checkbox" disabled="disabled" /><p></p></td>
+                    <td><input id="p4b25" class="bingo-checkbox" type="checkbox" disabled="disabled" /><p></p></td>
                 </tr>
             </table>
         </section>
