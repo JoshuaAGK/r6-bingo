@@ -323,7 +323,7 @@ class Client extends User {
         });
         this.clientConn.on('close', function () {
             console.log("Connection closed");
-            if (slotBusy && joinslot < 2) {
+            if (slotBusy && joinslot < 3) {
                 joinslot++;
                 thisparent.beginJoin = joinslot;
             }
