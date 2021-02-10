@@ -250,18 +250,20 @@ td p {
 
 #menu-controls input[type="text"] {
     appearance: none;
-    border: none;
+    border: 1px solid black;
+    color: black;
     text-align: center;
     font-size: 18px;
 }
 
 #menu-controls input[type="text"]::placeholder {
-    color: white;
+    color: black;
 }
 
 #menu-controls button {
     appearance: none;
-    border: none;
+    border: 1px solid black;
+    background-color: white;
     font-size: 18px;
     cursor: pointer;
 }
@@ -290,6 +292,10 @@ td p {
     #menu-controls input[type="text"] {
         background-color: black;
         border: 2px solid #666666;
+    }
+    
+    #menu-controls input[type="text"]::placeholder {
+        color: white;
     }
     
     #menu-controls button {
