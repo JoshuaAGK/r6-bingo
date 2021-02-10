@@ -87,6 +87,9 @@ class User {
         this.uid = uid;
         this.userArray = userArray;
         this.userType = userType;
+        this.userDictionary = {
+            host: this.username
+        };
     }
     
     
@@ -94,41 +97,46 @@ class User {
         var thisparent = this;
         this.sendMessage = {
             sender: thisparent.uid,
-            data: e.id + "/" + e.checked
+            data: [e.id, e.checked],
+            meta: "checkSquare"
         }
     }
     
     
     set sendMessage(param) {
-        var thisparent = this
+        var thisparent = this;
+        var data = param.data;
         var sender = param.sender;
-        var input = param.data;
-        
+        var meta = param.meta;
         var userNum = 0;
         var cellPrefix = "";
 
-        if (input == null) {
-            input = document.getElementById("userdata-username").value;
-        }
-        if (sender == null) {
-            sender = "host";
-        }
-        
+
         if (this.userType == "client") {
             if (this.clientConn && this.clientConn.open) {
-                this.clientConn.send(input);
+                this.clientConn.send(param);
             }
         } else {
-            userNum = this.userArray.indexOf(sender);
-            cellPrefix = "p" + userNum + "b";
+            if (meta == "userArray" || meta == "userDict") {
+                for (var i = 0; i < this.conns.length; i++) {
+                    if (this.conns[i] && this.conns[i].open && sender != this.conns[i].peer) {
+                        this.conns[i].send(param);
+                    }
+                }
+            } else {
+                userNum = this.userArray.indexOf(param.sender);
+                cellPrefix = "p" + userNum + "b";
 
+                data = [cellPrefix + data[0].substr(3), data[1]];
 
-            input = input.split("/");
-            input = cellPrefix + input[0].substr(3) + "/" + input[1];
-            
-            for (var i = 0; i < this.conns.length; i++) {
-                if (this.conns[i] && this.conns[i].open && sender != this.conns[i].peer) {
-                    this.conns[i].send(sender + ": " + input);
+                for (var i = 0; i < this.conns.length; i++) {
+                    if (this.conns[i] && this.conns[i].open && sender != this.conns[i].peer) {
+                        this.conns[i].send({
+                            sender: sender,
+                            data: data,
+                            meta: meta
+                        });
+                    }
                 }
             }
         }
@@ -145,6 +153,7 @@ class Host extends User {
     
 
     get beginHost() {
+        typeUsername();
         for (var i = 0; i < this.peers.length; i++) {
             const roomID = "r6bingo-" + document.getElementById("lobbydata-roomid").value + "-" + i;
             this.peers[i] = new Peer(roomID);
@@ -171,13 +180,14 @@ class Host extends User {
 
             function ready(j) {
                 thisparent.conns[j].on('open', function () {
-                    thisparent.sendUserArrayToClients;
+                    thisparent.sendMessage = {
+                        data: thisparent.userArray,
+                        sender: thisparent.uid,
+                        meta: "userArray"
+                    } 
                 });
                 thisparent.conns[j].on('data', function (data) {
-                    thisparent.receiveDataFromClient = {
-                        sender: thisparent.conns[j].peer,
-                        data: data
-                    };
+                    thisparent.receiveDataFromClient = data;
                 });
                 thisparent.conns[j].on('close', function () {
                     console.log(new Date().toISOString(), "Connection lost");
@@ -191,31 +201,41 @@ class Host extends User {
     }
     
     
-    get sendUserArrayToClients() {
-        for (var i = 0; i < this.conns.length; i++) {
-            if (this.conns[i] && this.conns[i].open) {
-                this.conns[i].send(this.userArray);
-            }
-        }
-    }
-    
-    
     set receiveDataFromClient(param) {
         var sender = param.sender;
         var data = param.data;
+        var meta = param.meta;
+        
+        var tables = document.querySelectorAll(".user-table");
+        var usernames = document.querySelectorAll(".user-name");
                 
-        this.sendMessage = ({
-            sender: sender,
-            data: data
-        });
+        if (meta == "checkSquare") {
+            var userNum = this.userArray.indexOf(sender);
 
-        var userNum = this.userArray.indexOf(sender);
+            var cellNumber = "p" + userNum + "b" + data[0].substr(3);
 
-        data = data.split("/");
-        var cellNumber = "p" + userNum + "b" + data[0].substr(3);
-
-        var checkBool = (data[1] == "true");
-        document.getElementById(cellNumber).checked = checkBool;
+            document.getElementById(cellNumber).checked = data[1];
+            
+            this.sendMessage = ({
+                sender: sender,
+                data: data,
+                meta: "forward"
+            });
+        } else if (meta == "username") {
+            this.userDictionary[sender] = data;
+            this.sendMessage = {
+                data: this.userDictionary,
+                sender: this.uid,
+                meta: "userDict"
+            }
+            for (var i = 0; i < this.conns.length; i++) {
+                if (this.conns[i] != null && this.conns[i].peer == sender) {
+                    usernames[i + 1].innerHTML = data;
+                }
+            }
+        } else {
+            console.log("how did I get here?", param)
+        }
     }
 }
 
@@ -264,6 +284,7 @@ class Client extends User {
     
     
     set beginJoin(joinslot = 0) {
+        typeUsername();
         var roomID = "r6bingo-" + document.getElementById("lobbydata-roomid").value + "-" + joinslot;
         var slotBusy = false;
         var thisparent = this;
@@ -285,6 +306,11 @@ class Client extends User {
 
             var mainWrapper = document.getElementById("main-wrapper");
             mainWrapper.className = "game-wrapper";
+            thisparent.sendMessage = {
+                sender: thisparent.uid,
+                data: thisparent.username,
+                meta: "username"
+            };
 
         });
         // Handle incoming data (messages only since this is the signal sender)
@@ -305,28 +331,36 @@ class Client extends User {
     }
     
     
-    set receiveDataFromHost(data) {
+    set receiveDataFromHost(param) {
         var thisparent = this;
-        if (Array.isArray(data)) {
-            data = data.filter(function(item) {
+        var tables = document.querySelectorAll(".user-table");
+        var usernames = document.querySelectorAll(".user-name");
+                
+        if (param.meta == "userArray") {
+            param.data = param.data.filter(function(item) {
                 return item !== thisparent.clientPeer.id;
             })
-            data = data.filter(function(item) {
+            param.data = param.data.filter(function(item) {
                 return item !== "host";
             })
 
-            this.userArray.push(...data);
-            console.log("All users:", this.userArray);
+            var tempArray = thisparent.userArray;
+            tempArray.push(...param.data);
+            thisparent.userArray = [...new Set(tempArray)];
+            console.log("All users:", thisparent.userArray);
+        } else if (param.meta == "userDict") {
+            thisparent.userDictionary = param.data;
+            console.log("Dictionary:", thisparent.userDictionary);
+            for (var i = 0; i < thisparent.userArray.length; i++) {
+                usernames[i].innerHTML = thisparent.userDictionary[thisparent.userArray[i]];
+            }
         } else {
-            var sender = data.split(": ")[0];
-            data = data.split(": ")[1]
-            var userNum = this.userArray.indexOf(sender);
+            var data = param.data
+            var userNum = this.userArray.indexOf(param.sender);
 
-            data = data.split("/");
-            var cellNumber = "p" + userNum + "b" + data[0].substr(3);
+            var cellNumber = "p" + userNum + "b" + param.data[0].substr(3);
 
-            var checkBool = (data[1] == "true");
-            document.getElementById(cellNumber).checked = checkBool;
+            document.getElementById(cellNumber).checked = param.data[1];
         }
     }
 }
@@ -348,4 +382,11 @@ function joinGame() {
 
 function goBack() {
     document.getElementById("menu-controls").className = "mainmenu";
+}
+
+function typeUsername() {
+    var username = document.getElementById("userdata-username").value;
+    user.username = username;
+    user.userDictionary.host = username;
+    document.querySelectorAll(".user-name")[0].innerHTML = username;
 }

@@ -32,7 +32,7 @@
             </figure>
 
             <div id="menu-controls" class="mainmenu">
-                <input type="text" name="userdata-username" id="userdata-username" placeholder="Username (not yet functional)" />
+                <input type="text" name="userdata-username" id="userdata-username" placeholder="Username" oninput="typeUsername()"/>
                 <button onclick="hostGame()">Host a game</button>
                 <button onclick="joinGame()">Join a game</button>
                 <input type="text" name="lobbydata-roomid" id="lobbydata-roomid" placeholder="Room ID" />
@@ -41,7 +41,7 @@
                 <button onclick="user.beginJoin=0">Join game</button>
             </div>
             
-            <h2 class="user-name">Username 1</h2>
+            <h2 class="user-name">Awaiting User...</h2>
             <table id="table-me" class="user-table">
                 <tr>
                     <td><input id="p0b1" class="bingo-checkbox" type="checkbox" onclick="user.checkSquare = this" /><p></p></td>
@@ -80,7 +80,7 @@
                 </tr>
             </table>
             
-            <h2 class="user-name">Username 2</h2>
+            <h2 class="user-name">Awaiting User...</h2>
             <table id="table-p1" class="user-table">
                 <tr>
                     <td><input id="p1b1" class="bingo-checkbox" type="checkbox" disabled="disabled" /><p></p></td>
@@ -119,7 +119,7 @@
                 </tr>
             </table>
             
-            <h2 class="user-name">Username 3</h2>
+            <h2 class="user-name">Awaiting User...</h2>
             <table id="table-p2" class="user-table">
                 <tr>
                     <td><input id="p2b1" class="bingo-checkbox" type="checkbox" disabled="disabled" /><p></p></td>
@@ -158,7 +158,7 @@
                 </tr>
             </table>
             
-            <h2 class="user-name">Username 4</h2>
+            <h2 class="user-name">Awaiting User...</h2>
             <table id="table-p3" class="user-table">
                 <tr>
                     <td><input id="p3b1" class="bingo-checkbox" type="checkbox" disabled="disabled" /><p></p></td>
@@ -197,7 +197,7 @@
                 </tr>
             </table>
             
-            <h2 class="user-name">Username 5</h2>
+            <h2 class="user-name">Awaiting User...</h2>
             <table id="table-p4" class="user-table">
                 <tr>
                     <td><input id="p4b1" class="bingo-checkbox" type="checkbox" disabled="disabled" /><p></p></td>
