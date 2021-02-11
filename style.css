@@ -292,6 +292,7 @@ td p {
     #menu-controls input[type="text"] {
         background-color: black;
         border: 2px solid #666666;
+        color: white;
     }
     
     #menu-controls input[type="text"]::placeholder {
