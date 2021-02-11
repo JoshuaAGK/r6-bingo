@@ -18,6 +18,7 @@ const objectives = {
         "Someone reinforces the walls between bombs",
         "Doc uses all of his stims on himself",
         "Get a wallbang or get wallbanged",
+        "Get a one tap or get one tapped",
         "Someone gets a kill while they're flashed",
         "Castle barricades the objective doors",
         "Iana runs right into a laser gate",
@@ -40,7 +41,8 @@ const objectives = {
         "Banwave",
         "Didn't see an opponent for the entire round",
         "Last friendly operator alive is roaming",
-        "Ace a round"
+        "Somebody aces a round",
+        "Somebody clutches a round"
     ]
 };
 
